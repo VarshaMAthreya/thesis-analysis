@@ -1,2 +1,2 @@
 # Thesis-Analysis
-Different statistical analysis used
+Statistical analysis for thesis and paper
