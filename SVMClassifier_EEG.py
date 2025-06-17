@@ -9,7 +9,7 @@ import seaborn as sns
 #Load data
 data_loc = 'C:/Users/varsh/Desktop/PhD/FinalPaper/'
 
-data = pd.read_csv(data_loc + 'ThesisAnalysis_DataPresent_4.14.25.csv')
+data = pd.read_csv(data_loc + 'ThesisAnalysis_DataPresent_WithoutOutliers_5.29.csv')
 
 #Creating age category -- Below and Above 40 years
 
@@ -96,32 +96,32 @@ print("Mean Binding Confusion Matrix:", binding_confusion_matrix_mean)
 feature_names = binding_model.columns
 sorted_idx = np.argsort(binding_coef_abs_mean)[::-1]
 
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(8, 6))
 plt.bar(range(n_features), binding_coef_abs_mean[sorted_idx], color='lightsteelblue')
 plt.xticks(range(n_features), feature_names[sorted_idx], rotation=45, ha='right')
-plt.ylabel("Mean Absolute Coefficient")
-plt.title("Binding Features – Importance (Linear SVM)")
+plt.ylabel("Mean Absolute Coefficient", fontsize = 16, fontweight = "bold")
+plt.title("Binding Features (Linear SVM)", fontsize = 18, fontweight = "bold")
 
 # Add text for mean accuracy and CV score on the plot
 mean_accuracy_text = f"Mean Accuracy: {binding_accuracy_mean:.3f}"
 mean_cv_score_text = f"Mean CV Score: {binding_cv_accuracy_mean:.3f}"
 
-plt.text(1, max(binding_coef_abs_mean) * 0.9, mean_accuracy_text, fontsize=12, color='black')
-plt.text(1, max(binding_coef_abs_mean) * 0.85, mean_cv_score_text, fontsize=12, color='black')
+plt.text(1.5, max(binding_coef_abs_mean) * 0.9, mean_accuracy_text, fontsize=14, color='black')
+plt.text(1.5, max(binding_coef_abs_mean) * 0.85, mean_cv_score_text, fontsize=14, color='black')
 
 plt.tight_layout()
 plt.show()
 plt.savefig(data_loc + 'ACFeature_FeatureImportance_4.18.png', dpi=500)
 
 # Feature Directionality (Raw Coefficients)
-# plt.figure(figsize=(10, 6))
-# plt.bar(range(n_features), binding_coef_mean[sorted_idx], color='slateblue')
-# plt.axhline(0, color='black', linewidth=0.8, linestyle='--')
-# plt.xticks(range(n_features), feature_names[sorted_idx], rotation=45, ha='right')
-# plt.ylabel("Mean Coefficient")
-# plt.title("Binding Features – Directional Weights (Linear SVM)")
-# plt.tight_layout()
-# plt.show()
+plt.figure(figsize=(8, 6))
+plt.bar(range(n_features), binding_coef_mean[sorted_idx], color='slateblue')
+plt.axhline(0, color='black', linewidth=0.8, linestyle='--')
+plt.xticks(range(n_features), feature_names[sorted_idx], rotation=45, ha='right')
+plt.ylabel("Mean Coefficient", fontsize = 16, fontweight = "bold")
+plt.title("Binding Features – Directional Weights (Linear SVM)", fontsize = 18, fontweight = "bold")
+plt.tight_layout()
+plt.show()
 
 # Mean Confusion Matrix
 plt.figure(figsize=(5, 4))
@@ -135,13 +135,15 @@ plt.show()
 # Boxplot of Feature Distributions by Age Group
 dat_binding_melt = dat_binding.melt(id_vars='age_group', value_vars=binding_features)
 
-plt.figure(figsize=(12, 6))
+plt.figure(figsize=(9, 6))
 sns.boxplot(x='variable', y='value', hue='age_group', data=dat_binding_melt)
 handles, labels = plt.gca().get_legend_handles_labels()
 labels = ['<=40' if label == '0' else '>40' for label in labels]
 plt.legend(handles, labels, title='Age Group')
-plt.xticks(rotation=90)
-plt.title('Distribution of Binding Features by Age Group')
+plt.xticks(rotation=45)
+plt.xlabel ('')
+plt.ylabel("Coefficient", fontsize = 16, fontweight = "bold")
+plt.title('Distribution of Binding Features by Age Group', fontsize = 18, fontweight = "bold")
 plt.tight_layout()
 plt.show()
 
@@ -157,7 +159,7 @@ binding_SF = binding.sum(axis=1)
 
 binding_all = pd.concat([dat_binding[['Subject']], abs_binding_SF.rename('AC_Feature_Abs'), binding_SF.rename('AC_Feature_NotAbs')], axis=1)
 
-binding_all.to_csv(data_loc + 'Binding_SF_Evoked_4.18_New.csv', index = False)
+binding_all.to_csv(data_loc + 'Binding_SF_Evoked_6.10.csv', index = False)
 
 #%% GDT | SVM
 
@@ -233,21 +235,22 @@ print("Mean GDT Confusion Matrix:", GDT_confusion_matrix_mean)
 feature_names_GDT = GDT_model.columns
 sorted_idx = np.argsort(GDT_coef_abs_mean)[::-1]
 
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(8, 6))
 plt.bar(range(len(feature_names_GDT)), GDT_coef_abs_mean[sorted_idx], color='mediumseagreen')
 plt.xticks(range(len(feature_names_GDT)), feature_names_GDT[sorted_idx], rotation=45, ha='right')
-plt.ylabel("Mean Absolute Coefficient")
-plt.title("GDT Features – Importance (Linear SVM)")
+plt.ylabel("Mean Absolute Coefficient", fontsize = 16, fontweight = "bold")
+plt.title("GDT Features (Linear SVM)", fontsize = 18, fontweight = "bold")
 
 # Add text for mean accuracy and CV score on the plot
 mean_accuracy_text = f"Mean Accuracy: {GDT_accuracy_mean:.3f}"
 mean_cv_score_text = f"Mean CV Score: {GDT_cv_accuracy_mean:.3f}"
 
-plt.text(1, max(GDT_coef_abs_mean) * 0.9, mean_accuracy_text, fontsize=12, color='black')
-plt.text(1, max(GDT_coef_abs_mean) * 0.85, mean_cv_score_text, fontsize=12, color='black')
+plt.text(1, max(GDT_coef_abs_mean) * 0.9, mean_accuracy_text, fontsize=14, color='black')
+plt.text(1, max(GDT_coef_abs_mean) * 0.85, mean_cv_score_text, fontsize=14, color='black')
 
 plt.tight_layout()
 plt.show()
+
 plt.savefig(data_loc + 'WCFeature_FeatureImportance_4.18.png', dpi=500)
 
 # Feature Directionality (Raw Coefficients)
@@ -272,15 +275,16 @@ plt.show()
 # Boxplot of Feature Distributions by Age Group
 dat_GDT_melt = dat_GDT.melt(id_vars='age_group', value_vars=GDT_features)
 
-plt.figure(figsize=(12, 6))
+plt.figure(figsize=(9, 6))
 sns.boxplot(x='variable', y='value', hue='age_group', data=dat_GDT_melt)
 
 handles, labels = plt.gca().get_legend_handles_labels()
 labels = ['<=40' if label == '0' else '>40' for label in labels]
 plt.legend(handles, labels, title='Age Group')
-
-plt.xticks(rotation=90)
-plt.title('Distribution of GDT Features by Age Group')
+plt.xticks(rotation=45)
+plt.xlabel ('')
+plt.ylabel("Coefficient", fontsize = 16, fontweight = "bold")
+plt.title('Distribution of GDT Features by Age Group', fontsize = 18, fontweight = "bold")
 plt.tight_layout()
 plt.show()
 
@@ -296,7 +300,7 @@ GDT_SF = GDT.sum(axis=1)
 
 GDT_all = pd.concat([dat_GDT[['Subject']], abs_GDT_SF.rename('WC_Feature_Abs'), GDT_SF.rename('WC_Feature_NotAbs')], axis=1)
 
-GDT_all.to_csv(data_loc + 'GDT_SF_Evoked_4.18_New.csv', index = False)
+GDT_all.to_csv(data_loc + 'GDT_SF_Evoked_6.10.csv', index = False)
 
 #%% Comparing the models
 
@@ -310,7 +314,7 @@ binding_cv_std = np.std(binding_cv_scores_all)
 GDT_cv_std = np.std(GDT_cv_scores_all)
 
 # Plotting
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(8, 6))
 
 models = ['Binding SVM', 'GDT SVM']
 accuracy_scores = [binding_accuracy_mean, GDT_accuracy_mean]
@@ -353,7 +357,7 @@ plt.savefig(data_loc + 'Binding_vs_GDT_Accuracy,CVScore_Comparison_4.18.png', dp
 
 #%% Comparing the coefficients of both the models
 
-plt.figure(figsize=(14, 6))
+plt.figure(figsize=(10, 6))
 
 binding_sorted_idx = np.argsort(binding_coef_abs_mean)[::-1]  # Sort coefficients for Binding SVM
 GDT_sorted_idx = np.argsort(GDT_coef_abs_mean)[::-1]  # Sort coefficients for GDT SVM
